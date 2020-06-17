@@ -1,5 +1,7 @@
 module Main where
 
+import Data.Text
+
 -- priority queue
 -- inbox
 -- information storage
@@ -9,8 +11,12 @@ module Main where
 -- analogous to Code | Data
 data Item = ToDo | Data
 
-data ToDo = ToDo {
-  description :: Text
+newtype ToDo = ToDoNew {
+  toDoDescription :: Text
+} deriving (Show)
+
+newtype Data = DataNew {
+  dataDescription :: Text
 } deriving (Show)
 
 -- TODO replace with priority list with good performance characteristics
