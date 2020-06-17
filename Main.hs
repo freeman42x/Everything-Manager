@@ -23,21 +23,22 @@ data Item = ToDo | Data
 -- all 3 bellow should inherit from `TextInformation`
 -- so that the `text` field should not have to be
 -- defined 3 times
+-- could also try: https://gitlab.haskell.org/ghc/ghc/-/wikis/records/overloaded-record-fields/duplicate-record-fields
+-- not sure if good idea
 
+-- TODO model structure, probably good start would be a tree
 -- |Information that you want to act upon
 newtype ToDo = ToDoNew {
-  toDoDescription :: Text
+  toDoText :: Text
 } deriving (Show)
 
 -- |Information that you do not want to act upon
 newtype Data = DataNew {
-  dataDescription :: Text
+  dataText :: Text
 } deriving (Show)
 
 -- |Item which was not immediately prioritized
-newtype InboxItem = InboxItemNew {
-  inboxItemDescription :: Text
-} deriving (Show)
+type InboxItem = ToDo
 
 -- TODO replace with queue with good performance characteristics
 -- by convention highest priority is head
