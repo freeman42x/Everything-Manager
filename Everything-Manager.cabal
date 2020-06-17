@@ -19,11 +19,18 @@ extra-source-files:  CHANGELOG.md, README.md
 
 executable Everything-Manager
   main-is:             Main.hs
-  -- other-modules:
+  other-modules:       Everything
   -- other-extensions:
   build-depends:       base,
                        text
   -- hs-source-dirs:
   default-language:    Haskell2010
-
   default-extensions:  OverloadedStrings
+
+library Everything-Manager-Library
+  other-modules:       Everything
+  -- other-extensions:
+  build-depends:       base,
+                       text
+  -- hs-source-dirs:
+  default-language:    Haskell2010

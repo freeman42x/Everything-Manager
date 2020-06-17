@@ -1,0 +1,5 @@
+:set -Wno-missing-home-modules
+
+:set -XOverloadedStrings
+
+:set prompt "%s\n\ESC[32m\STX>>>\ESC[0m\STX "
