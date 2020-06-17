@@ -3,7 +3,7 @@ module Main where
 import Data.Text
 import Numeric.Natural
 
--- priority queue
+-- queue
 -- inbox
 -- information storage
 -- adding a new task
@@ -14,6 +14,10 @@ data Everything = Everything
 
 -- |Core type of ToDo's and non-ToDo's information storage
 data Item = ToDo | Data
+
+-- QUESTION I think I run into the records problem.
+-- How do I use `description` for all of the bellow
+-- instead of having to name them differently
 
 -- |Information that you want to act upon
 newtype ToDo = ToDoNew {
@@ -30,11 +34,12 @@ newtype InboxItem = InboxItemNew {
   inboxItemDescription :: Text
 } deriving (Show)
 
--- TODO replace with priority list with good performance characteristics
+-- TODO replace with queue with good performance characteristics
 -- by convention highest priority is head
+-- Data.Sequence, Data.Queue or alternatives
 -- |This is where you will be prioritizing and executing the
 -- most important tasks from
-type PriorityQueue = [ToDo]
+type Queue = [ToDo]
 
 -- |This is where you will add an `InboxItem` when you
 -- do not immediately prioritize an `Item`
@@ -45,8 +50,8 @@ type Inbox = [InboxItem]
 type Priority = Natural
 
 -- TODO ensure this is a total function and will not throw errors
--- |Add a `ToDo` in the chosen place in the `PriorityQueue`
-addToDo :: ToDo -> Priority -> PriorityQueue -> PriorityQueue
+-- |Add a `ToDo` in the chosen place in the `Queue`
+addToDo :: ToDo -> Priority -> Queue -> Queue
 addToDo = undefined
 
 -- |Grooming action run before attempting to execute
