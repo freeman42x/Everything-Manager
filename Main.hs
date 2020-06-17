@@ -3,6 +3,12 @@ module Main where
 import Data.Text
 import Numeric.Natural
 
+-- This application is strongly connected to the following
+-- * human level AI
+-- * the way human beings optimally make decisions
+-- * and operating system architecture
+-- Consider them when thinking about what needs to be modeled
+
 -- TODO Model it, initially using a tree, later maybe a graph, ...
 -- |Every `ToDo` and `Note` stored in the app
 data Everything = Everything
@@ -35,7 +41,7 @@ newtype Note = Note {
 } deriving (Show)
 
 -- |Item which was not immediately prioritized
-type InboxItem = ToDo
+type InboxItem = Item
 
 -- TODO replace with queue with good performance characteristics
 -- by convention highest priority is head
@@ -55,12 +61,12 @@ type Priority = Natural
 -- TODO ensure this is a total function and will not throw errors
 -- |Add a `ToDo` in the chosen place in the `Queue`
 addToDo :: ToDo -> Priority -> Queue -> Queue
-addToDo = undefined
+addToDo todo priority queue = undefined
 
 -- |Grooming action run before attempting to execute
 -- the `ToDo` with `Priority` of 0
 startToDo :: Everything -> IO Everything
-startToDo = undefined
+startToDo everything = undefined
 
 
 
