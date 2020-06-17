@@ -12,9 +12,12 @@ import Numeric.Natural
 -- TODO Model it, initially using a tree, later maybe a graph, ...
 -- |Every `ToDo` and `Note` stored in the app
 data Everything = Everything {
-  inbox :: Inbox,
-  todos :: Queue,
-  notes :: [Note]
+  inbox  :: Inbox,
+  todos  :: Queue,
+  habits :: Habits,
+  async  :: Async,
+  notes  :: [Note], -- TODO change to `Tree Note`
+  thrash :: Thrash
 } deriving (Show)
 
 -- TODO both ToDos and Notes should be trees
@@ -44,6 +47,19 @@ newtype ToDo = ToDo {
 newtype Note = Note {
   noteText :: Text
 } deriving (Show)
+
+-- |ToDos run by external agents or systems
+-- are being queued here
+-- they might need to be pinged and have callbacks
+type Async = [ToDo]
+
+-- TODO model the periodicity
+-- |ToDos that need to be done periodically
+type Habits = [ToDo]
+
+-- |Items are moved here when they are deemed
+-- to never be useful in the future
+type Thrash = [Item]
 
 -- TODO replace with queue with good performance characteristics
 -- by convention highest priority is head
