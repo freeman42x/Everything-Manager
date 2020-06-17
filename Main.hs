@@ -1,6 +1,7 @@
 module Main where
 
 import Data.Text
+import Numeric.Natural
 
 -- priority queue
 -- inbox
@@ -35,6 +36,22 @@ type PriorityQueue = [ToDo]
 -- |This is where you will add an `InboxItem` when you
 -- do not immediately prioritize an `Item`
 type Inbox = [InboxItem]
+
+-- |Priority of 0 is highest Priority
+-- Optimal is to always execute priority 0 next
+type Priority = Natural
+
+-- TODO ensure this is a total function and will not throw errors
+-- |Add a `ToDo` in the chosen place in the `PriorityQueue`
+addToDo :: ToDo -> Priority -> PriorityQueue -> PriorityQueue
+addToDo = undefined
+
+
+
+
+
+
+
 
 
 
