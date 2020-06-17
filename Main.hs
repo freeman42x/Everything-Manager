@@ -19,6 +19,11 @@ data Item = ToDo | Data
 -- How do I use `description` for all of the bellow
 -- instead of having to name them differently
 
+-- TODO equivalent to inheritance
+-- all 3 bellow should inherit from `TextInformation`
+-- so that the `text` field should not have to be
+-- defined 3 times
+
 -- |Information that you want to act upon
 newtype ToDo = ToDoNew {
   toDoDescription :: Text
