@@ -9,6 +9,9 @@ import Numeric.Natural
 -- adding a new task
 -- starting work on a task
 
+-- |Every `ToDo` and `Data` stored in the app
+data Everything = Everything
+
 -- |Core type of ToDo's and non-ToDo's information storage
 data Item = ToDo | Data
 
@@ -46,6 +49,10 @@ type Priority = Natural
 addToDo :: ToDo -> Priority -> PriorityQueue -> PriorityQueue
 addToDo = undefined
 
+-- |Grooming action run before attempting to execute
+-- the `ToDo` with `Priority` of 0
+startToDo :: Everything -> IO Everything
+startToDo = undefined
 
 
 
