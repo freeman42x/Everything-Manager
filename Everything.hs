@@ -59,13 +59,20 @@ type Inbox = [InboxItem]
 type Priority = Natural
 
 -- TODO ensure this is a total function and will not throw errors
--- Ensure that an `ToDo` is either prioritiezed on the Queue
+-- Ensure that an `ToDo` is either prioritized on the Queue
 -- or if it is not prioritized it is added to the Inbox
 -- |Add a `ToDo` in the chosen place in the `Queue`
 addToDo :: ToDo -> Maybe Priority -> Everything -> Everything
 addToDo todo priority everything = undefined
+-- if no Priority then move to InboxItem
+-- otherwise add it to the Queue at Priority location
 
 -- |Grooming action run before attempting to execute
 -- the `ToDo` with `Priority` of 0
 startToDo :: Everything -> IO Everything
 startToDo everything = undefined
+-- Decent implementation:
+-- Move external InboxItems to Inbox
+-- Prioritize some items in Inbox
+-- Iterate over top n in Queue
+-- Let n = 10 cause we are humans
