@@ -3,20 +3,14 @@ module Main where
 import Data.Text
 import Numeric.Natural
 
--- queue
--- inbox
--- information storage
--- adding a new task
--- starting work on a task
-
 -- TODO Model it, initially using a tree, later maybe a graph, ...
--- |Every `ToDo` and `Data` stored in the app
+-- |Every `ToDo` and `Note` stored in the app
 data Everything = Everything
 
--- |Core type of ToDo's and non-ToDo's information storage
+-- |Core type of actionable ToDo's and non-actionable information storage
 data Item = Item {
   toDo :: ToDo,
-  dataNew :: Data
+  note :: Note
 }
 
 -- QUESTION I think I run into the records problem.
@@ -24,21 +18,20 @@ data Item = Item {
 -- instead of having to name them differently
 
 -- TODO equivalent to inheritance
--- all 3 bellow should inherit from `TextInformation`
+-- `ToDo` and `Note` should inherit from `TextInformation`
 -- so that the `text` field should not have to be
--- defined 3 times
+-- defined 2 times which is code duplication
 -- could also try: https://gitlab.haskell.org/ghc/ghc/-/wikis/records/overloaded-record-fields/duplicate-record-fields
 -- not sure if good idea
 
--- TODO model structure, probably good start would be a tree
 -- |Information that you want to act upon
 newtype ToDo = ToDo {
   toDoText :: Text
 } deriving (Show)
 
--- |Information that you do not want to act upon
-newtype Data = Data {
-  dataText :: Text
+-- |Information that you store for later reference
+newtype Note = Note {
+  noteText :: Text
 } deriving (Show)
 
 -- |Item which was not immediately prioritized
