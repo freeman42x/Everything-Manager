@@ -9,11 +9,15 @@ import Numeric.Natural
 -- adding a new task
 -- starting work on a task
 
+-- TODO Model it, initially using a tree, later maybe a graph, ...
 -- |Every `ToDo` and `Data` stored in the app
 data Everything = Everything
 
 -- |Core type of ToDo's and non-ToDo's information storage
-data Item = ToDo | Data
+data Item = Item {
+  toDo :: ToDo,
+  dataNew :: Data
+}
 
 -- QUESTION I think I run into the records problem.
 -- How do I use `description` for all of the bellow
@@ -28,12 +32,12 @@ data Item = ToDo | Data
 
 -- TODO model structure, probably good start would be a tree
 -- |Information that you want to act upon
-newtype ToDo = ToDoNew {
+newtype ToDo = ToDo {
   toDoText :: Text
 } deriving (Show)
 
 -- |Information that you do not want to act upon
-newtype Data = DataNew {
+newtype Data = Data {
   dataText :: Text
 } deriving (Show)
 
