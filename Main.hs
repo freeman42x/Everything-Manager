@@ -19,10 +19,15 @@ newtype Data = DataNew {
   dataDescription :: Text
 } deriving (Show)
 
+newtype InboxItem = InboxItemNew {
+  inboxItemDescription :: Text
+} deriving (Show)
+
 -- TODO replace with priority list with good performance characteristics
+-- by convention highest priority is head
 type PriorityQueue = [ToDo]
 
-
+type Inbox = [InboxItem]
 
 
 
