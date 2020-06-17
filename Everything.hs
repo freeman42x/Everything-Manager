@@ -11,8 +11,13 @@ import Numeric.Natural
 
 -- TODO Model it, initially using a tree, later maybe a graph, ...
 -- |Every `ToDo` and `Note` stored in the app
-data Everything = Everything deriving (Show)
+data Everything = Everything {
+  inbox :: Inbox,
+  todos :: Queue,
+  notes :: [Note]
+} deriving (Show)
 
+-- TODO both ToDos and Notes should be trees
 -- |Core type of actionable ToDo's and non-actionable information storage
 data Item = Item {
   toDo :: ToDo,
@@ -40,9 +45,6 @@ newtype Note = Note {
   noteText :: Text
 } deriving (Show)
 
--- |Item which was not immediately prioritized
-type InboxItem = Item
-
 -- TODO replace with queue with good performance characteristics
 -- by convention highest priority is head
 -- Data.Sequence, Data.Queue or alternatives
@@ -52,7 +54,7 @@ type Queue = [ToDo]
 
 -- |This is where you will add an `InboxItem` when you
 -- do not immediately prioritize an `Item`
-type Inbox = [InboxItem]
+type Inbox = [Item]
 
 -- |Priority of 0 is highest Priority
 -- Optimal is to always execute priority 0 next
