@@ -1,6 +1,7 @@
 module Everything where
 
 import Data.Text
+import Data.Tree
 import Numeric.Natural
 
 -- This application is strongly connected to the following
@@ -16,8 +17,8 @@ data Everything = Everything {
   todos  :: Queue,
   habits :: Habits,
   async  :: Async,
-  notes  :: [Note], -- TODO change to `Tree Note`
-  thrash :: Thrash
+  notes  :: Forest Note,
+  thrash :: Forest Thrash
 } deriving (Show)
 
 -- TODO both ToDos and Notes should be trees
