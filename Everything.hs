@@ -53,6 +53,8 @@ description = field @"_description"
 
 -- test = Note "Hi" ^. description
 
+-- try data instead of newtype?!
+
 -- above fails with:
 -- home/neo/Projects/Everything-Manager/Everything.hs: 54, 21: error:
 -- • | No instance for ‘Generic Note’
