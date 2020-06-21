@@ -29,6 +29,10 @@ Queue is a fixed small size ordered list where you keep actionable items (ToDo's
 
 Inbox is where you add a new ToDo or Note if you can not add it to the queue or notes. You might not be able to add a ToDo to the queue because the priority of the ToDo is lower than any item in the queue and the queue is full. You might also not be able to add a ToDo or a Note if you are just in a situation in which you do not have time to prioritize the new item or categorize the Note.
 
-
-
 > Note that many types of ToDo's have not been modeled yet. This includes core concerns regarding: parallelism, async, scheduling, habits, time, space, work context, etc.
+
+#### The algorithm
+
+Currently I use [Freeplane mind mapping software](https://www.freeplane.org/wiki/index.php/Home) for this and the system works pretty decently as long as you are somewhat disciplined. Currently my system involves more than just the 3 categories mentioned above but you can start with that and add as needed.
+
+If you also want to give it a try using Freeplane, download it and then create a new mindmap with 3 child nodes: `inbox`, `queue` and `notes`.
