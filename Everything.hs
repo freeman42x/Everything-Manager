@@ -1,7 +1,17 @@
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DuplicateRecordFields #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE OverloadedStrings #-}
+
 module Everything where
 
+import Control.Lens
+import Data.Generics.Product
 import Data.Text
 import Data.Tree
+import GHC.Generics
 import Numeric.Natural
 
 -- This application is strongly connected to the following
@@ -28,26 +38,27 @@ data Item = Item {
   note :: Note
 } deriving (Show)
 
--- QUESTION I think I run into the records problem.
--- How do I use `description` for all of the bellow
--- instead of having to name them differently
-
--- TODO equivalent to inheritance
--- `ToDo` and `Note` should inherit from `TextInformation`
--- so that the `text` field should not have to be
--- defined 2 times which is code duplication
--- could also try: https://gitlab.haskell.org/ghc/ghc/-/wikis/records/overloaded-record-fields/duplicate-record-fields
--- not sure if good idea
-
 -- |Information that you want to act upon
 newtype ToDo = ToDo {
-  toDoText :: Text
+  _description :: Text
 } deriving (Show)
 
--- |Information that you store for later reference
+-- |Information that you store without initial intention to act upon it
 newtype Note = Note {
-  noteText :: Text
+  _description :: Text
 } deriving (Show)
+
+description :: HasField "_description" s t a b => Lens s t a b
+description = field @"_description"
+
+test = Note "Hi" ^. description
+
+-- above fails with:
+-- home/neo/Projects/Everything-Manager/Everything.hs: 54, 21: error:
+-- • | No instance for ‘Generic Note’
+-- • In the second argument of ‘(^.)’, namely ‘description’
+--   In the expression: Note "Hi" ^. description
+--   In an equation for ‘test’: test = Note "Hi" ^. description
 
 -- |ToDos run by external agents or systems
 -- are being queued here
@@ -69,6 +80,7 @@ type Thrash = [Item]
 -- most important tasks from
 type Queue = [ToDo]
 
+-- TODO should be of small fixed size to not overburden the user mentally
 -- |This is where you will add an `InboxItem` when you
 -- do not immediately prioritize an `Item`
 type Inbox = [Item]

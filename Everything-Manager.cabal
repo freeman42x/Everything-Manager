@@ -16,13 +16,20 @@ executable Everything-Manager
   other-modules:       Everything
   build-depends:       base,
                        containers,
+                       generic-lens,
+                       lens,
                        text
   default-language:    Haskell2010
-  default-extensions:  OverloadedStrings
+  default-extensions:  DeriveGeneric,
+                       DuplicateRecordFields,
+                       OverloadedStrings,
+                       TemplateHaskell
 
 library Everything-Manager-Library
   other-modules:       Everything
   build-depends:       base,
                        containers,
+                       generic-lens,
+                       lens,
                        text
   default-language:    Haskell2010
