@@ -51,7 +51,7 @@ newtype Note = Note {
 description :: HasField "_description" s t a b => Lens s t a b
 description = field @"_description"
 
-test = Note "Hi" ^. description
+-- test = Note "Hi" ^. description
 
 -- above fails with:
 -- home/neo/Projects/Everything-Manager/Everything.hs: 54, 21: error:
