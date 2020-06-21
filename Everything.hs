@@ -41,26 +41,15 @@ data Item = Item {
 -- |Information that you want to act upon
 newtype ToDo = ToDo {
   _description :: Text
-} deriving (Show)
+} deriving (Show, Generic)
 
 -- |Information that you store without initial intention to act upon it
 newtype Note = Note {
   _description :: Text
-} deriving (Show)
+} deriving (Show, Generic)
 
 description :: HasField "_description" s t a b => Lens s t a b
 description = field @"_description"
-
--- test = Note "Hi" ^. description
-
--- try data instead of newtype?!
-
--- above fails with:
--- home/neo/Projects/Everything-Manager/Everything.hs: 54, 21: error:
--- • | No instance for ‘Generic Note’
--- • In the second argument of ‘(^.)’, namely ‘description’
---   In the expression: Note "Hi" ^. description
---   In an equation for ‘test’: test = Note "Hi" ^. description
 
 -- |ToDos run by external agents or systems
 -- are being queued here
