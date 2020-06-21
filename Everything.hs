@@ -73,14 +73,9 @@ type Inbox = [Item]
 -- Optimal is to always execute priority 0 next
 type Priority = Natural
 
--- TODO ensure this is a total function and will not throw errors
--- Ensure that an `ToDo` is either prioritized on the Queue
--- or if it is not prioritized it is added to the Inbox
 -- |Add a `ToDo` in the chosen place in the `Queue`
 addToDo :: ToDo -> Maybe Priority -> Everything -> Everything
 addToDo todo priority everything = undefined
--- if no Priority then move to InboxItem
--- otherwise add it to the Queue at Priority location
 
 -- |Grooming action run before attempting to execute
 -- the `ToDo` with `Priority` of 0
