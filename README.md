@@ -25,7 +25,7 @@ We store our information in:
 
 Notes are where you store any information on which you do not initially want to act upon. Example: list of anime you watched, nix commands, etc.
 
-Queue is a fixed small size ordered list where you keep actionable items (ToDo's). Whenever you want to start working on something you will attempt to initiate work on the most important item on this list which will be first since the list is ordered. The size of the list is up to you - choose some manageable size so you do not get overwhelmed (10 items is a pretty good number).
+Queue is a fixed small size ordered list where you keep actionable items (ToDo's). Whenever you want to start working on something you will attempt to initiate work on the most important item on this list which will be first since the list is ordered. The size of the list is up to you - choose some manageable size so you do not get overwhelmed (10 items should be a pretty good number).
 
 Inbox is where you add a new ToDo or Note if you can not add it to the Queue or Notes. You might not be able to add a ToDo to the queue because the priority of the ToDo is lower than any item in the Queue and the Queue is full. You might also not be able to add a ToDo or a Note if you are just in a situation in which you do not have time to prioritize the new item or categorize the Note.
 
@@ -45,7 +45,7 @@ When adding a new item classify it as ToDo or Note depending on your intention t
 
 When adding a ToDo:
 
-* if you can prioritize it and the Queue has less than 10 items then add it to the Queue at the right position
+* if its priority is higher than items in the queue then add it to the Queue at the right position. If this causes the queue to grow to 11 items then move the least important one to the Inbox
 * if you can't prioritize it for any reason like having no time then add it to the Inbox
 
 When adding a Note:
