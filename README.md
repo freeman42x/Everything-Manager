@@ -23,7 +23,7 @@ We store our information in:
 * Queue
 * Inbox
 
-Notes are where you store any information on which you do not initially want to act upon. Example: list of anime you watched, nix commands, etc.
+Notes are where you store any information on which you do not initially want to act upon. Example: list of movies you watched, list of books you wish to read, etc.
 
 Queue is a fixed small size ordered list where you keep actionable items (ToDo's). Whenever you want to start working on something you will attempt to initiate work on the most important item on this list which will be first since the list is ordered. The size of the list is up to you - choose some manageable size so you do not get overwhelmed (10 items should be a pretty good number).
 
@@ -56,6 +56,6 @@ When adding a Note:
 When intending to starting work on a ToDo:
 
 * if the number of items in the Queue is less than 10 then prioritize items from Inbox until the Queue is of size 10 or you run out of Inbox items
-* iterate through all items in the Queue and perform any smart actions regarding them as required, this can involve: reprioritizing them since reality changed, moving them to Inbox or Notes, adding new items anywhere, etc.
+* iterate through all items in the Queue and some items in the Inbox performing any smart actions regarding them as required, this can involve: reprioritizing them since reality changed, moving them to Inbox or Notes, adding new items anywhere, etc.
 * the process described above should be timeboxed as to not take too much time
 * after you finished the grooming process you can begin work on the ToDo which has the highest priority
