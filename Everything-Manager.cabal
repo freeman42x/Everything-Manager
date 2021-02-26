@@ -13,12 +13,13 @@ extra-source-files:  CHANGELOG.md, README.md
 
 executable Everything-Manager
   main-is:             Main.hs
-  other-modules:       Everything
+  other-modules:       Lib.EverythingManager
   build-depends:       base,
                        containers,
                        generic-lens,
                        lens,
-                       text
+                       text,
+                       hedgehog
   default-language:    Haskell2010
   default-extensions:  DataKinds,
                        DeriveGeneric,
@@ -28,12 +29,13 @@ executable Everything-Manager
                        TypeApplications
 
 library Everything-Manager-Library
-  other-modules:       Everything
+  other-modules:       Lib.EverythingManager
   build-depends:       base,
                        containers,
                        generic-lens,
                        lens,
-                       text
+                       text,
+                       hedgehog
   default-language:    Haskell2010
   default-extensions:  DataKinds,
                        DeriveGeneric,
