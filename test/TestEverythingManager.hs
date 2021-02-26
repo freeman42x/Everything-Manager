@@ -22,9 +22,9 @@ testAddToDo =
 
 
 
-main :: IO Bool
-main =
+tests :: IO Bool
+tests =
   checkParallel $ Group "Test.Example" [
-      -- ("init_everything", init_everything),
-      ("testAddToDo", testAddToDo)
+      ("init_everything", init_everything)
+      ("add_todo", add_todo)
     ]
