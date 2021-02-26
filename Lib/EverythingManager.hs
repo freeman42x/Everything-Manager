@@ -17,10 +17,10 @@ import Numeric.Natural
 -- |Every `ToDo` and `Note` stored in the app
 data Everything = Everything {
   inbox  :: Inbox,
-  todos  :: Queue,
+  queue  :: Queue,
+  notes  :: Forest Note,
   habits :: Habits,
   async  :: Async,
-  notes  :: Forest Note,
   thrash :: Forest Thrash
 } deriving (Show)
 
@@ -72,6 +72,8 @@ type Inbox = [Item]
 -- |Priority of 0 is highest Priority
 -- Optimal is to always execute priority 0 next
 type Priority = Natural
+
+
 
 -- |Add a `ToDo` in the chosen place in the `Queue`
 addToDo :: ToDo -> Maybe Priority -> Everything -> Everything
