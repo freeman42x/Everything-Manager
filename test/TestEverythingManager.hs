@@ -22,10 +22,6 @@ testAddToDo =
 
 
 
-<<<<<<< HEAD
-main :: IO Bool
-main =
-=======
 
 testAddInbox :: Property
 testAddInbox =
@@ -41,8 +37,11 @@ testAddInbox =
 
 main :: IO Bool
 main =
->>>>>>> 4c58f69... Rename tests to main
+=======
+tests :: IO Bool
+tests =
+>>>>>>> d2a8918... 13 - Add basic test suite code
   checkParallel $ Group "Test.Example" [
-      -- ("init_everything", init_everything),
-      ("testAddToDo", testAddToDo)
+      ("init_everything", init_everything)
+      ("add_todo", add_todo)
     ]
