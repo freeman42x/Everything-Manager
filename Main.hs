@@ -1,6 +1,6 @@
 module Main where
 
-import Everything
+import Lib.EverythingManager
 
 main :: IO ()
 main = print $ ToDo "First ToDo"
