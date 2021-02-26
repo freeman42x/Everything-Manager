@@ -1,4 +1,4 @@
-module Everything where
+module Lib.EverythingManager where
 
 import Control.Lens
 import Data.Generics.Product
