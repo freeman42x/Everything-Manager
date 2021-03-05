@@ -2,7 +2,7 @@ module Lib.EverythingManager where
 
 import Control.Lens
 import Data.Generics.Product
-import Data.Text
+import Data.Text hiding (take, drop)
 import Data.Tree
 import GHC.Generics
 import Numeric.Natural
@@ -22,24 +22,24 @@ data Everything = Everything {
   habits :: Habits,
   async  :: Async,
   thrash :: Forest Thrash
-} deriving (Show)
+} deriving (Show, Eq)
 
 -- TODO both ToDos and Notes should be trees
 -- |Core type of actionable ToDo's and non-actionable information storage
 data Item = Item {
   toDo :: ToDo,
   note :: Note
-} deriving (Show)
+} deriving (Show, Eq)
 
 -- |Information that you want to act upon
 newtype ToDo = ToDo {
   _description :: Text
-} deriving (Show, Generic)
+} deriving (Show, Generic, Eq)
 
 -- |Information that you store without initial intention to act upon it
 newtype Note = Note {
   _description :: Text
-} deriving (Show, Generic)
+} deriving (Show, Generic, Eq)
 
 description :: HasField "_description" s t a b => Lens s t a b
 description = field @"_description"
@@ -73,18 +73,22 @@ type Inbox = [Item]
 -- Optimal is to always execute priority 0 next
 type Priority = Natural
 
+-- makeLenses ''Everything
 
+-- TODO add error checking for invalid position
+addToDo :: Text -> Int -> Everything -> Everything
+addToDo description position (Everything e q n h a t) = (Everything e ((take position q) ++ [ToDo {_description = description}] ++ (drop position q)) n h a t)
 
--- |Add a `ToDo` in the chosen place in the `Queue`
-addToDo :: ToDo -> Maybe Priority -> Everything -> Everything
-addToDo todo priority everything = undefined
+-- Initialize everything by creating an empty everything type
+initEverything :: Everything
+initEverything = Everything {
+  inbox = [],
+  queue  = [],
+  notes  = [],
+  habits = [],
+  async = [],
+  thrash = []
+}
 
--- |Grooming action run before attempting to execute
--- the `ToDo` with `Priority` of 0
-startToDo :: Everything -> IO Everything
-startToDo everything = undefined
--- Decent implementation:
--- Move external InboxItems to Inbox
--- Prioritize some items in Inbox
--- Iterate over top n in Queue
--- Let n = 10 cause we are humans
+-- read everything from database or file
+loadEverything = undefined
