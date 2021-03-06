@@ -21,19 +21,19 @@ testAddToDo =
     result = addToDo description position everything
   result === Everything { inbox = [], queue  = [ToDo {_description = "TEST"}], notes  = [], habits = [], async = [], thrash = []}
 
-testMoveTodo :: Property
+testMoveToDo :: Property
 testMoveToDo =
   property $ do
   let
     position1 = 0
     position2 = 1
     everything = Everything {inbox = [], queue = [ToDo {_description = "TEST"},ToDo {_description = "TEST2"}], notes = [], habits = [], async = [], thrash = []}
-    result = addToDo description position everything
+    result = moveToDo position1 position2 everything
   result === Everything {inbox = [], queue = [ToDo {_description = "TEST2"},ToDo {_description = "TEST"}], notes = [], habits = [], async = [], thrash = []}
 
 
-testEditTodo :: Property
-testEditTodo
+testEditToDo :: Property
+testEditToDo =
   property $ do
   let
     position = 0

@@ -375,25 +375,35 @@ main = do
 
 -- TODO add error checking for invalid position
 addToDo :: Text -> Int -> Everything -> Everything
-addToDo description position (Everything e q n h a t) = (Everything e ((take position q) ++ [ToDo {_description = description}] ++ (drop position q)) n h a t)
+addToDo description position (Everything inbox queue notes habits async thrash) =
+  (Everything inbox ((take position queue) ++
+                 [ToDo {_description = description}]
+                 ++ (drop position queue)) notes habits async thrash)
 
--- read everything from database
-loadEverything = do
-  c <- getDbConn
-  inbox <- selectInbox c
-  queue <- selectQueue c
-  notes  <- selectNotes c
-  habits <- selectHabits c
-  async <- selectAsync c
-  thrash <- selectThrash c
-  return Everything {
-    inbox = inbox,
-    queue = queue,
-    notes  = notes,
-    habits = habits,
-    async = async,
-    thrash = thrash
-  }
+addInbox :: Text -> Text -> Int -> Everything -> Everything
+addInbox toDoDescription noteDescription position (Everything inbox queue notes habits async thrash) =
+  (Everything ((take position inbox) ++
+               [Item {toDo = ToDo {_description = toDoDescription},
+                      note = Note {_description = noteDescription}}]
+                ++ drop position inbox) queue notes habits async thrash)
+
+editToDo = undefined
+
+moveToDo = undefined
+
+-- Initialize everything by creating an empty everything type
+initEverything :: Everything
+initEverything = Everything {
+  inbox = [],
+  queue  = [],
+  notes  = [],
+  habits = [],
+  async = [],
+  thrash = []
+}
+
+-- read everything from database or file
+loadEverything = undefined
 
 -- the `ToDo` with `Priority` of 0
 startToDo :: Everything -> IO Everything
