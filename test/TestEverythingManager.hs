@@ -10,33 +10,37 @@ import Control.Monad (void)
 import Opaleye as O
 
 
-testInsertAndSelectInboxById :: Connection -> Property
-testInsertAndSelectInboxById conn = property $ do
-    toDoDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
-    noteDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
-    note_id <- liftIO $ insertInbox conn toDoDescription noteDescription
-    i <- liftIO $ selectInboxById conn note_id
-    let (Item (ToDo id1 desc1) (Note id2 desc2)) = i
-    i === Item { toDo = ToDo {id = id1, _description = toDoDescription}, note = Note {id = id2, _description = noteDescription}}
+-- Start with empty everything. add a todo. ensure todo is successfully added to everything
+testAddToDo :: Property
+testAddToDo =
+  property $ do
+  let
+    description = "TEST"
+    position = 0
+    everything = initEverything
+    result = addToDo description position everything
+  result === Everything { inbox = [], queue  = [ToDo {_description = "TEST"}], notes  = [], habits = [], async = [], thrash = []}
 
-clearToDoTable :: Connection -> IO ()
-clearToDoTable conn = do
-  void $ runDelete_ conn del
-  where del = Delete {
-          dTable = toDoTable
-          -- use statement that always evals to true, could be improved
-          ,dWhere = (\(iDb, _, _, _) -> iDb .== iDb)
-          , dReturning = rCount
-  }
-clearNotesTable :: Connection -> IO ()
-clearNotesTable conn = do
-  void $ runDelete_ conn del
-  where del = Delete {
-          dTable = notesTable
-          -- use statement that always evals to true, could be improved
-          ,dWhere = (\(iDb, _, _, _) -> iDb .== iDb)
-          , dReturning = rCount
-  }
+testMoveTodo :: Property
+testMoveToDo =
+  property $ do
+  let
+    position1 = 0
+    position2 = 1
+    everything = Everything {inbox = [], queue = [ToDo {_description = "TEST"},ToDo {_description = "TEST2"}], notes = [], habits = [], async = [], thrash = []}
+    result = addToDo description position everything
+  result === Everything {inbox = [], queue = [ToDo {_description = "TEST2"},ToDo {_description = "TEST"}], notes = [], habits = [], async = [], thrash = []}
+
+
+testEditTodo :: Property
+testEditTodo
+  property $ do
+  let
+    position = 0
+    description = "TESTEDIT"
+    everything = Everything { inbox = [], queue  = [ToDo {_description = "TEST"}], notes  = [], habits = [], async = [], thrash = []}
+    result = editToDo description position everything
+  result === Everything { inbox = [], queue  = [ToDo {_description = "TESTEDIT"}], notes  = [], habits = [], async = [], thrash = []}
 
 runClearDb :: Connection -> IO ()
 runClearDb conn = do
@@ -54,6 +58,7 @@ runClearDb conn = do
 --     result = addToDo description position everything
 --   result === Everything { inbox = [], queue  = [ToDo {_description = "TEST"}], notes  = [], habits = [], async = [], thrash = []}
 
+<<<<<<< HEAD
 -- testMoveToDo :: Property
 -- testMoveToDo =
 --   property $ do
@@ -94,9 +99,30 @@ runClearDb conn = do
 -- TODO make an abstraction that does this better
 main :: IO Bool
 main =
+=======
+
+testAddInbox :: Property
+testAddInbox =
+  property $ do
+  let
+    toDoDescription = "TEST"
+    noteDescription = "TEST2"
+    position = 0
+    everything = initEverything
+    result = addInbox toDoDescription noteDescription position everything
+  result === Everything {inbox = [Item {toDo = ToDo {_description = "TEST"}, note = Note {_description = "TEST2"}}], queue = [], notes = [], habits = [], async = [], thrash = []}
+
+
+tests :: IO Bool
+tests =
+>>>>>>> 15b0600... 13 - Add unit tests
+>>>>>>> e5d7260... 13 - Add unit tests
   checkParallel $ Group "Test.Example" [
-      ("init_everything", init_everything)
-      ("add_todo", add_todo)
+      -- ("init_everything", init_everything),
+      ("testAddToDo", testAddToDo),
+      ("testMoveToDo", testMoveToDo),
+      ("testEditToDo", testEditToDo),
+      ("testAddInbox", testAddInbox)
     ]
 main = do
   c <- testDbConn
