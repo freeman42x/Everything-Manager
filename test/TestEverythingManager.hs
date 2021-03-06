@@ -10,8 +10,6 @@ import Control.Monad.IO.Class
 testAddToDo :: Property
 testAddToDo =
   property $ do
-  -- description <- forAll $ Gen.list (Range.linear 0 100) Gen.alpha
-  -- priority <- forAll $ Gen.int (Range.linear 0 100) 
   let
     description = "TEST"
     position = 0
@@ -19,12 +17,48 @@ testAddToDo =
     result = addToDo description position everything
   result === Everything { inbox = [], queue  = [ToDo {_description = "TEST"}], notes  = [], habits = [], async = [], thrash = []}
 
+testMoveTodo :: Property
+testMoveToDo =
+  property $ do
+  let
+    position1 = 0
+    position2 = 1
+    everything = Everything {inbox = [], queue = [ToDo {_description = "TEST"},ToDo {_description = "TEST2"}], notes = [], habits = [], async = [], thrash = []}
+    result = addToDo description position everything
+  result === Everything {inbox = [], queue = [ToDo {_description = "TEST2"},ToDo {_description = "TEST"}], notes = [], habits = [], async = [], thrash = []}
 
+
+testEditTodo :: Property
+testEditTodo
+  property $ do
+  let
+    position = 0
+    description = "TESTEDIT"
+    everything = Everything { inbox = [], queue  = [ToDo {_description = "TEST"}], notes  = [], habits = [], async = [], thrash = []}
+    result = editToDo description position everything
+  result === Everything { inbox = [], queue  = [ToDo {_description = "TESTEDIT"}], notes  = [], habits = [], async = [], thrash = []}
+
+
+
+
+testAddInbox :: Property
+testAddInbox =
+  property $ do
+  let
+    toDoDescription = "TEST"
+    noteDescription = "TEST2"
+    position = 0
+    everything = initEverything
+    result = addInbox toDoDescription noteDescription position everything
+  result === Everything {inbox = [Item {toDo = ToDo {_description = "TEST"}, note = Note {_description = "TEST2"}}], queue = [], notes = [], habits = [], async = [], thrash = []}
 
 
 tests :: IO Bool
 tests =
   checkParallel $ Group "Test.Example" [
-      ("init_everything", init_everything)
-      ("add_todo", add_todo)
+      -- ("init_everything", init_everything),
+      ("testAddToDo", testAddToDo),
+      ("testMoveToDo", testMoveToDo),
+      ("testEditToDo", testEditToDo),
+      ("testAddInbox", testAddInbox)
     ]
