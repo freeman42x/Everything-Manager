@@ -77,17 +77,21 @@ type Priority = Natural
 
 -- TODO add error checking for invalid position
 addToDo :: Text -> Int -> Everything -> Everything
-addToDo description position (Everything i q n h a t) =
-  (Everything i ((take position q) ++
+addToDo description position (Everything inbox queue notes habits async thrash) =
+  (Everything inbox ((take position queue) ++
                  [ToDo {_description = description}]
-                 ++ (drop position q)) n h a t)
+                 ++ (drop position queue)) notes habits async thrash)
 
 addInbox :: Text -> Text -> Int -> Everything -> Everything
-addInbox toDoDescription noteDescription position (Everything i q n h a t) =
-  (Everything ((take position i) ++
+addInbox toDoDescription noteDescription position (Everything inbox queue notes habits async thrash) =
+  (Everything ((take position inbox) ++
                [Item {toDo = ToDo {_description = toDoDescription},
                       note = Note {_description = noteDescription}}]
-                ++ drop position i) q n h a t)
+                ++ drop position inbox) queue notes habits async thrash)
+
+editToDo = undefined
+
+moveToDo = undefined
 
 -- Initialize everything by creating an empty everything type
 initEverything :: Everything
@@ -102,3 +106,12 @@ initEverything = Everything {
 
 -- read everything from database or file
 loadEverything = undefined
+
+-- the `ToDo` with `Priority` of 0
+startToDo :: Everything -> IO Everything
+startToDo everything = undefined
+-- Decent implementation:
+-- Move external InboxItems to Inbox
+-- Prioritize some items in Inbox
+-- Iterate over top n in Queue
+-- Let n = 10 cause we are humans
