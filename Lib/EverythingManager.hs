@@ -77,7 +77,17 @@ type Priority = Natural
 
 -- TODO add error checking for invalid position
 addToDo :: Text -> Int -> Everything -> Everything
-addToDo description position (Everything e q n h a t) = (Everything e ((take position q) ++ [ToDo {_description = description}] ++ (drop position q)) n h a t)
+addToDo description position (Everything i q n h a t) =
+  (Everything i ((take position q) ++
+                 [ToDo {_description = description}]
+                 ++ (drop position q)) n h a t)
+
+addInbox :: Text -> Text -> Int -> Everything -> Everything
+addInbox toDoDescription noteDescription position (Everything i q n h a t) =
+  (Everything ((take position i) ++
+               [Item {toDo = ToDo {_description = toDoDescription},
+                      note = Note {_description = noteDescription}}]
+                ++ drop position i) q n h a t)
 
 -- Initialize everything by creating an empty everything type
 initEverything :: Everything
