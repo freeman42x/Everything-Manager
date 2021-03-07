@@ -53,8 +53,8 @@ testAddInbox =
   result === Everything {inbox = [Item {toDo = ToDo {_description = "TEST"}, note = Note {_description = "TEST2"}}], queue = [], notes = [], habits = [], async = [], thrash = []}
 
 
-tests :: IO Bool
-tests =
+main :: IO Bool
+main =
   checkParallel $ Group "Test.Example" [
       -- ("init_everything", init_everything),
       ("testAddToDo", testAddToDo),
