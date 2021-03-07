@@ -22,8 +22,26 @@ testAddToDo =
 
 
 
+<<<<<<< HEAD
 main :: IO Bool
 main =
+=======
+
+testAddInbox :: Property
+testAddInbox =
+  property $ do
+  let
+    toDoDescription = "TEST"
+    noteDescription = "TEST2"
+    position = 0
+    everything = initEverything
+    result = addInbox toDoDescription noteDescription position everything
+  result === Everything {inbox = [Item {toDo = ToDo {_description = "TEST"}, note = Note {_description = "TEST2"}}], queue = [], notes = [], habits = [], async = [], thrash = []}
+
+
+main :: IO Bool
+main =
+>>>>>>> 4c58f69... Rename tests to main
   checkParallel $ Group "Test.Example" [
       -- ("init_everything", init_everything),
       ("testAddToDo", testAddToDo)
