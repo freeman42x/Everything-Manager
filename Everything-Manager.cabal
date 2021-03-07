@@ -19,7 +19,8 @@ executable Everything-Manager
                        generic-lens,
                        lens,
                        text,
-                       hedgehog
+                       hedgehog,
+                       opaleye
   default-language:    Haskell2010
   default-extensions:  DataKinds,
                        DeriveGeneric,
@@ -35,7 +36,8 @@ library Everything-Manager-Library
                        generic-lens,
                        lens,
                        text,
-                       hedgehog
+                       hedgehog,
+                       opaleye
   default-language:    Haskell2010
   default-extensions:  DataKinds,
                        DeriveGeneric,
@@ -43,3 +45,22 @@ library Everything-Manager-Library
                        FlexibleContexts,
                        OverloadedStrings,
                        TypeApplications
+
+Test-Suite test
+    type:       exitcode-stdio-1.0
+    main-is: test/TestEverythingManager.hs
+    other-modules:       Lib.EverythingManager
+    build-depends:       base,
+                         containers,
+                         generic-lens,
+                         lens,
+                         text,
+                         hedgehog,
+                         opaleye
+    default-language:    Haskell2010
+    default-extensions:  DataKinds,
+                         DeriveGeneric,
+                         DuplicateRecordFields,
+                         FlexibleContexts,
+                         OverloadedStrings,
+                         TypeApplications
