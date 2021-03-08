@@ -6,6 +6,10 @@ import Data.Text
 import Data.Tree
 import GHC.Generics
 import Numeric.Natural
+import Opaleye as O
+import Data.Profunctor.Product (p2)
+import Database.PostgreSQL.Simple (Connection, connect, ConnectInfo(..))
+import Lib.Connection
 
 -- This application is strongly connected to the following
 -- * human level AI
@@ -23,6 +27,23 @@ data Everything = Everything {
   async  :: Async,
   thrash :: Forest Thrash
 } deriving (Show)
+
+
+
+toDoTable :: Table (Field SqlInt4, Field SqlText) (Field SqlInt4, Field SqlText)
+toDoTable = Table "toDo" (p2 (
+    tableField "id"
+    ,tableField "description"))
+
+selectAllToDos :: Connection -> IO [(Int, Text)]
+selectAllToDos conn =
+  O.runSelect conn $
+  O.selectTable toDoTable
+
+main = do
+  c <- getDbConn
+  [(toDoId, toDoDescription),_] <- selectAllToDos c
+  putStrLn $ show toDoDescription
 
 -- TODO both ToDos and Notes should be trees
 -- |Core type of actionable ToDo's and non-actionable information storage
