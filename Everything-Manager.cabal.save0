@@ -1,0 +1,37 @@
+cabal-version:       >=1.10
+name:                Everything-Manager
+version:             0.1.0.0
+synopsis:            System used to optimize the efficiency of achieving goals.
+bug-reports:         https://github.com/fairy-tale-agi-solutions/Everything-Manager/issues
+license:             MIT
+license-file:        LICENSE
+author:              Răzvan Flavius Panda
+maintainer:          razvan.panda@gmail.com
+category:            Productivity
+build-type:          Simple
+extra-source-files:  CHANGELOG.md, README.md
+
+executable Everything-Manager
+  main-is:             Main.hs
+  other-modules:       Everything
+  build-depends:       base,
+                       containers,
+                       generic-lens,
+                       lens,
+                       text
+  default-language:    Haskell2010
+  default-extensions:  DataKinds,
+                       DeriveGeneric,
+                       DuplicateRecordFields,
+                       FlexibleContexts,
+                       OverloadedStrings,
+                       TypeApplications
+
+library Everything-Manager-Library
+  other-modules:       Everything
+  build-depends:       base,
+                       containers,
+                       generic-lens,
+                       lens,
+                       text
+  default-language:    Haskell2010
