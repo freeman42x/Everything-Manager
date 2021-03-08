@@ -20,6 +20,8 @@ executable Everything-Manager
                        lens,
                        text,
                        hedgehog,
+                       postgresql-simple,
+                       product-profunctors,
                        opaleye
   default-language:    Haskell2010
   default-extensions:  DataKinds,
@@ -37,6 +39,8 @@ library Everything-Manager-Library
                        lens,
                        text,
                        hedgehog,
+                       postgresql-simple,
+                       product-profunctors,
                        opaleye
   default-language:    Haskell2010
   default-extensions:  DataKinds,
@@ -56,6 +60,8 @@ Test-Suite test
                          lens,
                          text,
                          hedgehog,
+                         postgresql-simple,
+                         product-profunctors,
                          opaleye
     default-language:    Haskell2010
     default-extensions:  DataKinds,
