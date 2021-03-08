@@ -1,0 +1,24 @@
+diff a/Everything-Manager.cabal b/Everything-Manager.cabal	(rejected hunks)
+@@ -43,3 +43,22 @@ library Everything-Manager-Library
+                        FlexibleContexts,
+                        OverloadedStrings,
+                        TypeApplications
++
++Test-Suite test
++    type:       exitcode-stdio-1.0
++    main-is: test/TestEverythingManager.hs
++    other-modules:       Lib.EverythingManager
++    build-depends:       base,
++                         containers,
++                         generic-lens,
++                         lens,
++                         text,
++                         hedgehog
++    default-language:    Haskell2010
++    default-extensions:  DataKinds,
++                         DeriveGeneric,
++                         DuplicateRecordFields,
++                         FlexibleContexts,
++                         OverloadedStrings,
++                         TypeApplications
++                        TemplateHaskell
