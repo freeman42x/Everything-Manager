@@ -29,7 +29,8 @@ executable Everything-Manager
                        DuplicateRecordFields,
                        FlexibleContexts,
                        OverloadedStrings,
-                       TypeApplications
+                       TypeApplications,
+                       Arrows
 
 library Everything-Manager-Library
   other-modules:       Lib.EverythingManager
@@ -48,7 +49,8 @@ library Everything-Manager-Library
                        DuplicateRecordFields,
                        FlexibleContexts,
                        OverloadedStrings,
-                       TypeApplications
+                       TypeApplications,
+                       Arrows
 
 Test-Suite test
     type:       exitcode-stdio-1.0
@@ -69,4 +71,5 @@ Test-Suite test
                          DuplicateRecordFields,
                          FlexibleContexts,
                          OverloadedStrings,
-                         TypeApplications
+                         TypeApplications,
+                         Arrows
