@@ -2,7 +2,7 @@ module Lib.EverythingManager where
 
 import Control.Lens
 import Data.Generics.Product
-import Data.Text hiding (take, drop, map)
+import Data.Text hiding (take, drop, map, head)
 import Data.Tree
 import GHC.Generics
 import Numeric.Natural
@@ -34,10 +34,10 @@ thrashIndex = 5
 data Everything = Everything {
   inbox  :: Inbox,
   queue  :: Queue,
-  notes  :: Forest Note,
+  notes  :: [ToDo],
   habits :: Habits,
   async  :: Async,
-  thrash :: Forest Thrash
+  thrash :: Thrash
 } deriving (Show, Eq)
 
 
@@ -129,8 +129,8 @@ selectAllToDos conn =
 
 selectNoteByType :: Connection -> Int -> IO [(Int, Text, Int, Text)]
 selectNoteByType conn toDoType = O.runSelect conn $ proc () -> do
-  row1@(id1, noteDescription,toDoId, deleted1) <- O.selectTable notesTable -< ()
-  row2@(id2,toDoDescription,toDoType', deleted2) <- O.selectTable toDoTable -< ()
+  row1@(id1, noteDescription, toDoId, deleted1) <- O.selectTable notesTable -< ()
+  row2@(id2, toDoDescription, toDoType', deleted2) <- O.selectTable toDoTable -< ()
   restrict -< (toDoType' .== O.toFields toDoType)
   restrict -< (deleted1 .== O.toFields (0 :: Int))
   restrict -< (deleted2 .== O.toFields (0 :: Int))
@@ -179,14 +179,14 @@ deleteToDo conn id =
     }
 
 
-insertNote :: Connection -> Text -> Int -> IO ()
+insertNote :: Connection -> Text -> Int -> IO [(Int)]
 insertNote conn noteDescription toDoId =
-  void $ runInsert_ conn ins
+  runInsert_ conn ins
   where
     ins = Insert {
       iTable = notesTable
       ,iRows = [(Nothing, toFields noteDescription, toFields toDoId, toFields (0 :: Int))]
-      ,iReturning = rCount
+      ,iReturning = rReturning (\(id, _, _, _) -> id)
       ,iOnConflict = Nothing
     }
 
@@ -221,10 +221,19 @@ selectInbox conn = do
                 note = Note {id = noteId, _description = noteDescription}
               }) items)
 
-insertInbox :: Connection -> Text -> Text -> IO ()
+selectInboxById :: Connection -> Int -> IO Item
+selectInboxById conn id = do
+  [(noteId, noteDescription, toDoId, toDoDescription)] <- selectNoteById conn id
+  return Item { toDo = ToDo {id = toDoId, _description = toDoDescription},
+                note = Note {id = noteId, _description = noteDescription}
+              }
+
+
+insertInbox :: Connection -> Text -> Text -> IO Int
 insertInbox conn toDoDescription noteDescription = do
   [(toDoId)] <- insertToDo conn toDoDescription inboxIndex
-  insertNote conn noteDescription toDoId
+  [(noteId)] <- insertNote conn noteDescription toDoId
+  return noteId
 
 updateInbox :: Connection -> Int -> Text -> Int -> Int -> Text -> IO ()
 updateInbox conn toDoId toDoDescription toDoType noteId noteDescription = do
@@ -321,10 +330,11 @@ selectThrash conn = do
               }) items)
 
 
-insertThrash :: Connection -> Text -> Text -> IO ()
+insertThrash :: Connection -> Text -> Text -> IO Int
 insertThrash conn noteDescription toDoDescription = do
   [(toDoId)] <- insertToDo conn toDoDescription thrashIndex
-  insertNote conn noteDescription toDoId
+  [(noteId)] <- insertNote conn noteDescription toDoId
+  return noteId
 
 updateThrash :: Connection -> Int -> Text -> Int -> Int -> Text -> IO ()
 updateThrash conn toDoId toDoDescription toDoType noteId noteDescription = do
