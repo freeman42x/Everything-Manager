@@ -19,6 +19,57 @@ testInsertAndSelectInboxById conn = property $ do
     let (Item (ToDo id1 desc1) (Note id2 desc2)) = i
     i === Item { toDo = ToDo {id = id1, _description = toDoDescription}, note = Note {id = id2, _description = noteDescription}}
 
+-- testInsertAndSelectInbox :: Connection -> Property
+-- testInsertAndSelectInbox conn = property $ do
+--     toDoDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+--     noteDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+--     note_id <- liftIO $ insertInbox conn toDoDescription noteDescription
+--     is <- liftIO $ selectInbox conn
+--     length is === 1
+
+testInsertAndSelectQueueById :: Connection -> Property
+testInsertAndSelectQueueById conn = property $ do
+    toDoDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+    id <- liftIO $ insertQueue conn toDoDescription
+    i <- liftIO $ selectQueueById conn id
+    let (ToDo id1 desc1) = i
+    i === ToDo {id = id1, _description = desc1}
+
+
+testInsertAndSelectNotesById :: Connection -> Property
+testInsertAndSelectNotesById conn = property $ do
+    toDoDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+    id <- liftIO $ insertNotes conn toDoDescription
+    i <- liftIO $ selectNotesById conn id
+    let (ToDo id1 desc1) = i
+    i === ToDo {id = id1, _description = desc1}
+
+testInsertAndSelectHabitById :: Connection -> Property
+testInsertAndSelectHabitById conn = property $ do
+    toDoDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+    id <- liftIO $ insertHabit conn toDoDescription
+    i <- liftIO $ selectHabitById conn id
+    let (ToDo id1 desc1) = i
+    i === ToDo {id = id1, _description = desc1}
+
+testInsertAndSelectAsyncById :: Connection -> Property
+testInsertAndSelectAsyncById conn = property $ do
+    toDoDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+    id <- liftIO $ insertAsync conn toDoDescription
+    i <- liftIO $ selectAsyncById conn id
+    let (ToDo id1 desc1) = i
+    i === ToDo {id = id1, _description = desc1}
+
+testInsertAndSelectThrashById :: Connection -> Property
+testInsertAndSelectThrashById conn = property $ do
+    toDoDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+    noteDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+    note_id <- liftIO $ insertThrash conn toDoDescription noteDescription
+    i <- liftIO $ selectThrashById conn note_id
+    let (Item (ToDo id1 desc1) (Note id2 desc2)) = i
+    i === Item { toDo = ToDo {id = id1, _description = toDoDescription}, note = Note {id = id2, _description = noteDescription}}
+
+
 clearToDoTable :: Connection -> IO ()
 clearToDoTable conn = do
   void $ runDelete_ conn del
@@ -28,6 +79,7 @@ clearToDoTable conn = do
           ,dWhere = (\(iDb, _, _, _) -> iDb .== iDb)
           , dReturning = rCount
   }
+
 clearNotesTable :: Connection -> IO ()
 clearNotesTable conn = do
   void $ runDelete_ conn del
@@ -40,8 +92,8 @@ clearNotesTable conn = do
 
 runClearDb :: Connection -> IO ()
 runClearDb conn = do
-  clearToDoTable conn
   clearNotesTable conn
+  clearToDoTable conn
 
 -- -- -- Start with empty everything. add a todo. ensure todo is successfully added to everything
 -- testAddToDo :: Property
@@ -92,8 +144,20 @@ runClearDb conn = do
 
 -- Call runClearDb after every unit test that uses the database.
 -- TODO make an abstraction that does this better
-main :: IO Bool
-main = do
+testAll :: IO Bool
+testAll = do
   c <- testDbConn
   runClearDb c
   check $ testInsertAndSelectInboxById c
+  -- runClearDb c
+  -- check $ testInsertAndSelectInbox c
+  runClearDb c
+  check $ testInsertAndSelectQueueById c
+  runClearDb c
+  check $ testInsertAndSelectNotesById c
+  runClearDb c
+  check $ testInsertAndSelectHabitById c
+  runClearDb c
+  check $ testInsertAndSelectAsyncById c
+  runClearDb c
+  check $ testInsertAndSelectThrashById c
