@@ -117,6 +117,13 @@ selectToDoByType conn toDoType' = O.runSelect conn $ proc () -> do
   restrict -< (deleted .== O.toFields (0 :: Int))
   returnA -< (id, description)
 
+selectToDoById :: Connection -> Int -> IO [(Int, Text)]
+selectToDoById conn id = O.runSelect conn $ proc () -> do
+  row@(id1, toDoDescription, toDoType', deleted1) <- O.selectTable toDoTable -< ()
+  restrict -< (id1 .== toFields id)
+  returnA -< (id1, toDoDescription)
+
+
 selectAllNotes :: Connection -> IO [(Int, Text, Int, Int)]
 selectAllNotes conn =
   O.runSelect conn $
@@ -228,7 +235,6 @@ selectInboxById conn id = do
                 note = Note {id = noteId, _description = noteDescription}
               }
 
-
 insertInbox :: Connection -> Text -> Text -> IO Int
 insertInbox conn toDoDescription noteDescription = do
   [(toDoId)] <- insertToDo conn toDoDescription inboxIndex
@@ -252,8 +258,17 @@ selectQueue conn = do
           ToDo {id = toDoId, _description = toDoDescription})
          items)
 
-insertQueue :: Connection -> Text -> IO [(Int)]
-insertQueue conn description = insertToDo conn description queueIndex
+selectQueueById :: Connection -> Int -> IO ToDo
+selectQueueById conn id = do
+    [(id1, desc1)] <- selectToDoById conn id
+    return ToDo {id = id1, _description = desc1}
+
+
+insertQueue :: Connection -> Text -> IO Int
+insertQueue conn description = do
+  [(id)] <- insertToDo conn description queueIndex
+  return id
+
 
 updateQueue :: Connection -> Int -> Text -> Int -> IO ()
 updateQueue conn id description toDoType =
@@ -271,9 +286,15 @@ selectNotes conn = do
           ToDo {id = toDoId, _description = toDoDescription})
          items)
 
+selectNotesById :: Connection -> Int -> IO ToDo
+selectNotesById conn id = do
+    [(id1, desc1)] <- selectToDoById conn id
+    return ToDo {id = id1, _description = desc1}
 
-insertNotes :: Connection -> Text -> IO [(Int)]
-insertNotes conn description = insertToDo conn description noteIndex
+insertNotes :: Connection -> Text -> IO Int
+insertNotes conn description = do
+  [(id)] <- insertToDo conn description noteIndex
+  return id
 
 updateNotes :: Connection -> Int -> Text -> Int -> IO ()
 updateNotes conn id description toDoType =
@@ -283,7 +304,6 @@ deleteNotes :: Connection -> Int -> IO ()
 deleteNotes conn toDoId =
   deleteToDo conn toDoId
 
-
 selectHabits :: Connection -> IO [ToDo]
 selectHabits conn = do
   items <- selectToDoByType conn habitIndex
@@ -291,8 +311,15 @@ selectHabits conn = do
           ToDo {id = toDoId, _description = toDoDescription})
          items)
 
-insertHabits :: Connection -> Text -> IO [(Int)]
-insertHabits conn description = insertToDo conn description habitIndex
+selectHabitById :: Connection -> Int -> IO ToDo
+selectHabitById conn id = do
+    [(id1, desc1)] <- selectToDoById conn id
+    return ToDo {id = id1, _description = desc1}
+
+insertHabit :: Connection -> Text -> IO Int
+insertHabit conn description = do
+  [(id)] <- insertToDo conn description habitIndex
+  return id
 
 updateHabits :: Connection -> Int -> Text -> Int -> IO ()
 updateHabits conn id description toDoType =
@@ -309,9 +336,15 @@ selectAsync conn = do
           ToDo {id = toDoId, _description = toDoDescription})
          items)
 
+selectAsyncById :: Connection -> Int -> IO ToDo
+selectAsyncById conn id = do
+    [(id1, desc1)] <- selectToDoById conn id
+    return ToDo {id = id1, _description = desc1}
 
-insertAsync :: Connection -> Text -> IO [(Int)]
-insertAsync conn description = insertToDo conn description asyncIndex
+insertAsync :: Connection -> Text -> IO Int
+insertAsync conn description = do
+  [(id)] <- insertToDo conn description asyncIndex
+  return id
 
 updateAsync :: Connection -> Int -> Text -> Int -> IO ()
 updateAsync conn id description toDoType =
@@ -329,6 +362,12 @@ selectThrash conn = do
                 note = Note {id = noteId, _description = noteDescription}
               }) items)
 
+selectThrashById :: Connection -> Int -> IO Item
+selectThrashById conn id = do
+  [(noteId, noteDescription, toDoId, toDoDescription)] <- selectNoteById conn id
+  return Item { toDo = ToDo {id = toDoId, _description = toDoDescription},
+                note = Note {id = noteId, _description = noteDescription}
+              }
 
 insertThrash :: Connection -> Text -> Text -> IO Int
 insertThrash conn noteDescription toDoDescription = do
