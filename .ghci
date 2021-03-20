@@ -2,4 +2,6 @@
 
 :set -XOverloadedStrings
 
+:load Lib/EverythingManager.hs
+
 :set prompt "%s\n\ESC[32m\STX>>>\ESC[0m\STX "
