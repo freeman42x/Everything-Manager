@@ -6,9 +6,15 @@ import Control.Monad.IO.Class
 import Opaleye.Manipulation
 import Database.PostgreSQL.Simple (Connection, connect, ConnectInfo(..))
 import Lib.Connection
-import Control.Monad (void)
+import Control.Monad (void, forM_)
 import Opaleye as O
 
+
+-- TODO finish implementing
+testLoadSettings :: Connection -> Property
+testLoadSettings conn = undefined
+--   settings <- loadSettings conn
+--   settings === Settings { queue_size = 10, theme = dark, hints = 0}
 
 testInsertAndSelectInboxById :: Connection -> Property
 testInsertAndSelectInboxById conn = property $ do
@@ -19,22 +25,67 @@ testInsertAndSelectInboxById conn = property $ do
     let (Item (ToDo id1 desc1) (Note id2 desc2)) = i
     i === Item { toDo = ToDo {id = id1, _description = toDoDescription}, note = Note {id = id2, _description = noteDescription}}
 
--- testInsertAndSelectInbox :: Connection -> Property
--- testInsertAndSelectInbox conn = property $ do
---     toDoDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
---     noteDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
---     note_id <- liftIO $ insertInbox conn toDoDescription noteDescription
---     is <- liftIO $ selectInbox conn
---     length is === 1
+testInsertAndSelectInbox :: Connection -> Property
+testInsertAndSelectInbox conn = property $ do
+    toDoDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+    noteDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+    note_id <- liftIO $ insertInbox conn toDoDescription noteDescription
+    is <- liftIO $ selectInbox conn
+    length is === 1
 
 testInsertAndSelectQueueById :: Connection -> Property
 testInsertAndSelectQueueById conn = property $ do
     toDoDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
     id <- liftIO $ insertQueue conn toDoDescription
     i <- liftIO $ selectQueueById conn id
-    let (ToDo id1 desc1) = i
-    i === ToDo {id = id1, _description = desc1}
+    -- let (ToDo id1 desc1) = i
+    i === ToDo {id = id, _description = toDoDescription}
 
+testUpdateQueue :: Connection -> Property
+testUpdateQueue conn = property $ do
+    toDoDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+    id <- liftIO $ insertQueue conn toDoDescription
+    toDoDescription2 <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+    liftIO $ updateQueue conn id toDoDescription2
+    item <- liftIO $ selectQueueById conn id
+    item === ToDo {id = id, _description = toDoDescription2}
+
+testMoveQueue :: Connection -> Property
+testMoveQueue conn = property $ do
+    toDoDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+    id <- liftIO $ insertQueue conn toDoDescription
+    toDoDescription2 <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+    id2 <- liftIO $ insertQueue conn toDoDescription2
+    liftIO $ moveQueue conn id2 0
+    items <- liftIO $ selectQueue conn
+    items === [ToDo {id = id2, _description = toDoDescription2}, ToDo {id = id, _description = toDoDescription }]
+
+testDeleteQueue :: Connection -> Property
+testDeleteQueue conn = property $ do
+    toDoDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+    id <- liftIO $ insertQueue conn toDoDescription
+    liftIO $ deleteQueue conn id
+    items <- liftIO $ selectQueue conn
+    (length items) === 0
+
+
+-- TODO finish implementing
+testAddQueueWhenFull :: Connection -> Property
+testAddQueueWhenFull conn = property $ do
+    toDoDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+    id <- liftIO $ forM_ [1..10] $ \_ -> do
+      insertQueue conn toDoDescription
+    items <- liftIO $ selectQueue conn
+    (length items) === 0
+
+testChangeQueueToInbox :: Connection -> Property
+testChangeQueueToInbox conn = property $ do
+    toDoDescription <- forAll $ Gen.text (Range.linear 0 100) Gen.alpha
+    id <- liftIO $ insertQueue conn toDoDescription
+    (ToDo id1 desc1) <- liftIO $ selectQueueById conn id
+    liftIO $ updateToDo conn id1 desc1 inboxIndex
+    items <- liftIO $ selectInbox conn
+    (length items) === 1
 
 testInsertAndSelectNotesById :: Connection -> Property
 testInsertAndSelectNotesById conn = property $ do
@@ -68,7 +119,6 @@ testInsertAndSelectThrashById conn = property $ do
     i <- liftIO $ selectThrashById conn note_id
     let (Item (ToDo id1 desc1) (Note id2 desc2)) = i
     i === Item { toDo = ToDo {id = id1, _description = toDoDescription}, note = Note {id = id2, _description = noteDescription}}
-
 
 clearToDoTable :: Connection -> IO ()
 clearToDoTable conn = do
@@ -154,10 +204,16 @@ testAll = do
   runClearDb c
   check $ testInsertAndSelectQueueById c
   runClearDb c
+  check $ testUpdateQueue c
+  runClearDb c
+  check $ testMoveQueue c
+  runClearDb c
+  check $ testDeleteQueue c
+  runClearDb c
   check $ testInsertAndSelectNotesById c
   runClearDb c
   check $ testInsertAndSelectHabitById c
   runClearDb c
   check $ testInsertAndSelectAsyncById c
-  runClearDb c
-  check $ testInsertAndSelectThrashById c
+  -- runClearDb c
+  -- check $ testInsertAndSelectThrashById c
