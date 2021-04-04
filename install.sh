@@ -1,7 +1,11 @@
 #!/usr/bin/bash
 
+command_not_exists () {
+    ! command -v $1 &> /dev/null
+}
+
 install_nix () {
-    if ! command -v nix-env &> /dev/null
+    if command_not_exists nix-env
     then
         curl -L https://nixos.org/nix/install | sh
         . /home/ben/.nix-profile/etc/profile.d/nix.sh
@@ -16,9 +20,6 @@ install_nix () {
             unstable = import <nixpkgs> { inherit config; };
         in
           {
-            allowUnfree = true;
-            allowBroken = true;
-        
             packageOverrides = pkgs: rec {
               all = pkgs.buildEnv {
                 name = \"all\";
@@ -45,12 +46,12 @@ createdb -U postgres testdb
 psql -U postgres -d postgres
 }
 
-if ! command -v curl &> /dev/null
+if command_not_exists curl
 then
     echo "The program curl is required to run this script."
     exit
 fi
-if ! command -v ghc &> /dev/null
+if command_not_exists ghc
 then
     while true; do
         read -p "It is detected that ghc isn't installed. Would you like to install it with nix? y/n:" yn
@@ -61,7 +62,7 @@ then
         esac
     done
 fi
-if ! command -v pg_config &> /dev/null
+if command_not_exists pg_config
 then
     while true; do
         read -p "It is detected that you do not have postgres installed. Would you like to install it now with nix? y/n:" yn	
@@ -73,7 +74,7 @@ then
     done
 fi
 
-if ! command -v cachix &> /dev/null
+if command_not_exists cachix
 then
     nix-env -iA cachix -f https://cachix.org/api/v1/install
 fi
