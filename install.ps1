@@ -35,10 +35,6 @@ if (-Not (Get-Command "pg_config" -errorAction SilentlyContinue))
 }
 Log "setup done!"
 # TODO Get cachix working
-curl -L https://nixos.org/nix/install | sh
-nix-env -iA cachix -f https://cachix.org/api/v1/install
-cachix use everythingmanager
-nix-shell
 cabal update
 cabal install --only-dependencies
 cabal build
