@@ -34,7 +34,7 @@ if (-Not (Get-Command "pg_config" -errorAction SilentlyContinue))
     Log "postgresql13 installed."
 }
 Log "setup done!"
-# TODO Get cachix working
+
 cabal update
 cabal install --only-dependencies
 cabal build

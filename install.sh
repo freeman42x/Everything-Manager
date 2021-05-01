@@ -8,7 +8,7 @@ install_nix () {
     if command_not_exists nix-env
     then
         curl -L https://nixos.org/nix/install | sh
-        . /home/ben/.nix-profile/etc/profile.d/nix.sh
+        . /home/ben/.nix-profile/etc/profile.d/nix.sh # fix hardcoded current user path
     fi
     if [ ! -f ~/.config/nixpkgs/config.nix ];
     then
@@ -77,7 +77,7 @@ if command_not_exists cachix
 then
     nix-env -iA cachix -f https://cachix.org/api/v1/install
 fi
-cachix use everythingmanager
+cachix use everything
 nix-shell
 cabal update
 cabal install --only-dependencies
