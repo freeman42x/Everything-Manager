@@ -1,0 +1,10 @@
+cradle:
+  cabal:
+    - path: "./Main.hs"
+      component: "Everything-Manager:exe:Everything-Manager"
+
+    - path: "./Lib.EverythingManager.hs"
+      component: "Everything-Manager:exe:Everything-Manager"
+
+    - path: "./"
+      component: "Everything-Manager:lib:Everything-Manager-Library"
